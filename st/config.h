@@ -7,7 +7,7 @@
  */
 static char *font = "Monospace:size=9";
 static char *font2[] = { 
-    "Noto Emoji:size=9"
+    "Symbola:size=9"
 };
 static int borderpx = 2;
 
