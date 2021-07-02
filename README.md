@@ -15,5 +15,5 @@ $ make && sudo make install
 
 See [my dotfiles](https://github.com/aktsbot/dotfiles/).
 
-![preview](https://www.aktsbot.in/pub/scrots/dwm_suckless_01.png)
+![preview](https://www.aktsbot.in/pub/scrots/dwm_suckless_02.png)
 
