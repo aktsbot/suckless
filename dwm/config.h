@@ -34,7 +34,7 @@ static const Rule rules[] = {
 	/* class          instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",         NULL,       NULL,       0,            1,           -1 },
 	{ "Lxappearance", NULL,       NULL,       0,            1,           -1 },
-  { "Pavucontrol",  NULL,       NULL,       0,            1,           -1 },
+	{ "Pavucontrol",  NULL,       NULL,       0,            1,           -1 },
 };
 
 /* layout(s) */
@@ -87,18 +87,18 @@ static const char *filercmd[] = { "pcmanfm", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-  { 0,                            XF86MonBrightnessDown,     spawn,         {.v = cmdbrightnessdown } },
-  { 0,                            XF86MonBrightnessUp,       spawn,         {.v = cmdbrightnessup } },
-  { 0,                            XF86AudioMute,             spawn,         {.v = cmdsoundtoggle } },
-  { 0,                            XF86AudioRaiseVolume,      spawn,         {.v = cmdsoundup } },
-  { 0,                            XF86AudioLowerVolume,      spawn,         {.v = cmdsounddown } }, 
-  { 0,                            XF86AudioMicMute,          spawn,         {.v = mictoggle } },
-  { MODKEY,                       XK_x,      spawn,          {.v = cmdlock } },
-  { MODKEY|ShiftMask,             XK_w,      spawn,          {.v = browsercmd } },
-  { MODKEY|ShiftMask,             XK_e,      spawn,          {.v = editorcmd } },
-  { MODKEY|ShiftMask,             XK_f,      spawn,          {.v = filercmd } },
-  { MODKEY,                       XK_c,      spawn,          {.v = calendarcmd } },
-  { MODKEY,                       XK_Insert, spawn,          {.v = clipcmd } },
+	{ 0,                            XF86MonBrightnessDown,     spawn,         {.v = cmdbrightnessdown } },
+	{ 0,                            XF86MonBrightnessUp,       spawn,         {.v = cmdbrightnessup } },
+	{ 0,                            XF86AudioMute,             spawn,         {.v = cmdsoundtoggle } },
+  	{ 0,                            XF86AudioRaiseVolume,      spawn,         {.v = cmdsoundup } },
+  	{ 0,                            XF86AudioLowerVolume,      spawn,         {.v = cmdsounddown } }, 
+  	{ 0,                            XF86AudioMicMute,          spawn,         {.v = mictoggle } },
+  	{ MODKEY,                       XK_x,      spawn,          {.v = cmdlock } },
+  	{ MODKEY|ShiftMask,             XK_w,      spawn,          {.v = browsercmd } },
+  	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = editorcmd } },
+  	{ MODKEY|ShiftMask,             XK_f,      spawn,          {.v = filercmd } },
+  	{ MODKEY,                       XK_c,      spawn,          {.v = calendarcmd } },
+  	{ MODKEY,                       XK_Insert, spawn,          {.v = clipcmd } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
@@ -131,8 +131,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY,                       XK_q,      quit,           {0} },
-  { MODKEY|ShiftMask,             XK_x,      spawn,           { .v = powermenucmd } }
+	{ MODKEY|ControlMask,		XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_x,      spawn,	  { .v = powermenucmd } }
 };
 
 /* button definitions */
