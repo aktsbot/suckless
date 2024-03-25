@@ -42,6 +42,7 @@ static const Rule rules[] = {
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -79,27 +80,27 @@ static const char *mictoggle[]  = { "pactl", "set-source-mute", "1", "toggle", N
 static const char *cmdbrightnessup[] = { "xbacklight", "-inc", "10%", NULL };
 static const char *cmdbrightnessdown[] = { "xbacklight", "-dec", "10%", NULL };
 static const char *cmdlock[] = { "slock", NULL };
-static const char *clipcmd[]  = { "clip", NULL };
-static const char *powermenucmd[] = { "wm_exit", NULL };
+static const char *powermenucmd[] = { "dwm_exit.sh", NULL };
 static const char *browsercmd[] = { "firefox", NULL };
-static const char *editorcmd[] = { "st", "-e", "vim" ,NULL };
-static const char *calendarcmd[] = { "gsimplecal", NULL };
-static const char *filercmd[] = { "pcmanfm", NULL };
+static const char *editorcmd[] = { "st", "-e", "nvim" ,NULL };
+static const char *filercmd[] = { "thunar", NULL };
+static const char *toggleredshiftcmd[] = { "toggle_redshift", NULL };
+static const char *audaciouscmd[] = { "audacious", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ 0,                            XF86MonBrightnessDown,     spawn,         {.v = cmdbrightnessdown } },
 	{ 0,                            XF86MonBrightnessUp,       spawn,         {.v = cmdbrightnessup } },
 	{ 0,                            XF86AudioMute,             spawn,         {.v = cmdsoundtoggle } },
-  	{ 0,                            XF86AudioRaiseVolume,      spawn,         {.v = cmdsoundup } },
-  	{ 0,                            XF86AudioLowerVolume,      spawn,         {.v = cmdsounddown } }, 
-  	{ 0,                            XF86AudioMicMute,          spawn,         {.v = mictoggle } },
-  	{ MODKEY,                       XK_x,      spawn,          {.v = cmdlock } },
-  	{ MODKEY|ShiftMask,             XK_w,      spawn,          {.v = browsercmd } },
-  	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = editorcmd } },
-  	{ MODKEY|ShiftMask,             XK_f,      spawn,          {.v = filercmd } },
-  	{ MODKEY,                       XK_c,      spawn,          {.v = calendarcmd } },
-  	{ MODKEY,                       XK_Insert, spawn,          {.v = clipcmd } },
+	{ 0,                            XF86AudioRaiseVolume,      spawn,         {.v = cmdsoundup } },
+	{ 0,                            XF86AudioLowerVolume,      spawn,         {.v = cmdsounddown } }, 
+	{ 0,                            XF86AudioMicMute,          spawn,         {.v = mictoggle } },
+	{ MODKEY,                       XK_x,      spawn,          {.v = cmdlock } },
+	{ MODKEY|ShiftMask,             XK_w,      spawn,          {.v = browsercmd } },
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = editorcmd } },
+	{ MODKEY|ShiftMask,             XK_f,      spawn,          {.v = filercmd } },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = audaciouscmd } },
+	{ MODKEY|ShiftMask,             XK_b,			 spawn,          {.v = toggleredshiftcmd } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
@@ -152,5 +153,4 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
 

@@ -18,12 +18,12 @@ necessary as root):
 
     make clean install
 
-
 Patching order
 --------------
 
 patch -p1 < patches/dwm-pertag-20200914-61bb8b2.diff
-patch -p1 < patches/dwm-systray-20210217-61bb8b2.diff
+patch -p1 < patches/dwm-systray-20230922-9f88553.diff
+patch -p1 < patches/dwm-fixborders-6.2.diff
 
 Running dwm
 -----------
