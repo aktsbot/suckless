@@ -71,7 +71,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 // static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *dmenucmd[] = { "ddrun", NULL };
+static const char *dmenucmd[] = { "dmenu_run.sh", NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *cmdsoundup[]  = { "pactl", "set-sink-volume", "0", "+5%", NULL };
 static const char *cmdsounddown[]  = { "pactl", "set-sink-volume", "0", "-5%", NULL };
@@ -80,11 +80,11 @@ static const char *mictoggle[]  = { "pactl", "set-source-mute", "1", "toggle", N
 static const char *cmdbrightnessup[] = { "xbacklight", "-inc", "10%", NULL };
 static const char *cmdbrightnessdown[] = { "xbacklight", "-dec", "10%", NULL };
 static const char *cmdlock[] = { "slock", NULL };
-static const char *powermenucmd[] = { "dwm_exit.sh", NULL };
+static const char *powermenucmd[] = { "dmenu_exit.sh", NULL };
 static const char *browsercmd[] = { "firefox", NULL };
 static const char *editorcmd[] = { "st", "-e", "nvim" ,NULL };
 static const char *filercmd[] = { "thunar", NULL };
-static const char *toggleredshiftcmd[] = { "toggle_redshift", NULL };
+static const char *toggleredshiftcmd[] = { "toggle-redshift", NULL };
 static const char *audaciouscmd[] = { "audacious", NULL };
 
 static Key keys[] = {
