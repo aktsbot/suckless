@@ -5,10 +5,14 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Monospace:size=9";
-static char *font2[] = { 
-    "Symbola:size=9"
+static char *font = "Monospace:pixelsize=12:antialias=true:autohint=true";
+/* Spare fonts */
+static char *font2[] = {
+/*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
+/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
+	"Symbola:pixelsize=10:antialias=true:autohint=true"
 };
+
 static int borderpx = 2;
 
 /*
@@ -76,7 +80,7 @@ static unsigned int cursorthickness = 2;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw = 1;
+const int boxdraw = 0;
 const int boxdraw_bold = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
@@ -111,42 +115,42 @@ unsigned int tabspaces = 8;
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-  "#1c1c1c",
-  "red3",
-  "green4",
-  "yellow3",
-  "blue2",
-  "magenta3",
-  "cyan3",
-  "gray90",
-  
-  /* 8 bright colors */
-  "gray50",
-  "red",
-  "green",
-  "yellow",
-  "#5c5cff",
-  "magenta",
-  "cyan",
-  "white",
+	"#202020",
+	"red3",
+	"green3",
+	"yellow3",
+	"blue2",
+	"magenta3",
+	"cyan3",
+	"gray90",
 
+	/* 8 bright colors */
+	"gray50",
+	"red",
+	"green",
+	"yellow",
+	"#5c5cff",
+	"magenta",
+	"cyan",
+	"white",
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-  "red",
-  "#555555",
-  "black",
-  "#c3c3c3"
+	"#e5a50a",
+	"#202020",
+	"#aaaaaa", /* default foreground colour */
+	"black", /* default background colour */
 };
+
 
 /*
  * Default colors (colorname index)
  * foreground, background, cursor, reverse cursor
  */
-unsigned int defaultfg = 259;
-unsigned int defaultbg = 258;
-static unsigned int defaultcs = 256;
+unsigned int defaultfg = 258;
+unsigned int defaultbg = 259;
+unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
 
 /*

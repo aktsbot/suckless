@@ -48,7 +48,7 @@ typedef struct {
 /* X modifiers */
 #define XK_ANY_MOD    UINT_MAX
 #define XK_NO_MOD     0
-#define XK_SWITCH_MOD (1<<13)
+#define XK_SWITCH_MOD (1<<13|1<<14)
 
 /* function definitions used in config.h */
 static void clipcopy(const Arg *);
@@ -156,8 +156,9 @@ static void xresize(int, int);
 static void xhints(void);
 static int xloadcolor(int, const char *, Color *);
 static int xloadfont(Font *, FcPattern *);
-static void xloadfonts(char *, double);
-static void xloadsparefont();
+static void xloadfonts(const char *, double);
+static int xloadsparefont(FcPattern *, int);
+static void xloadsparefonts(void);
 static void xunloadfont(Font *);
 static void xunloadfonts(void);
 static void xsetenv(void);
@@ -307,7 +308,7 @@ zoomabs(const Arg *arg)
 {
 	xunloadfonts();
 	xloadfonts(usedfont, arg->f);
-	xloadsparefont();
+	xloadsparefonts();
 	cresize(0, 0);
 	redraw();
 	xhints();
@@ -803,6 +804,19 @@ xloadcols(void)
 }
 
 int
+xgetcolor(int x, unsigned char *r, unsigned char *g, unsigned char *b)
+{
+	if (!BETWEEN(x, 0, dc.collen))
+		return 1;
+
+	*r = dc.col[x].color.red >> 8;
+	*g = dc.col[x].color.green >> 8;
+	*b = dc.col[x].color.blue >> 8;
+
+	return 0;
+}
+
+int
 xsetcolorname(int x, const char *name)
 {
 	Color ncolor;
@@ -955,7 +969,7 @@ xloadfont(Font *f, FcPattern *pattern)
 }
 
 void
-xloadfonts(char *fontstr, double fontsize)
+xloadfonts(const char *fontstr, double fontsize)
 {
 	FcPattern *pattern;
 	double fontval;
@@ -963,7 +977,7 @@ xloadfonts(char *fontstr, double fontsize)
 	if (fontstr[0] == '-')
 		pattern = XftXlfdParse(fontstr, False, False);
 	else
-		pattern = FcNameParse((FcChar8 *)fontstr);
+		pattern = FcNameParse((const FcChar8 *)fontstr);
 
 	if (!pattern)
 		die("can't open font %s\n", fontstr);
@@ -1024,64 +1038,98 @@ xloadfonts(char *fontstr, double fontsize)
 	FcPatternDestroy(pattern);
 }
 
-void
-xloadsparefont()
+int
+xloadsparefont(FcPattern *pattern, int flags)
 {
-	FcPattern *fontpattern, *match;
+	FcPattern *match;
 	FcResult result;
 
-	/* add font2 to font cache as first 4 entries */
-	if ( font2[0] == '-' )
-		fontpattern = XftXlfdParse(font2, False, False);
-	else
-		fontpattern = FcNameParse((FcChar8 *)font2);
-	if ( fontpattern ) {
-		/* Allocate memory for the new cache entries. */
-		frccap += 4;
+	match = FcFontMatch(NULL, pattern, &result);
+	if (!match) {
+		return 1;
+	}
+
+	if (!(frc[frclen].font = XftFontOpenPattern(xw.dpy, match))) {
+		FcPatternDestroy(match);
+		return 1;
+	}
+
+	frc[frclen].flags = flags;
+	/* Believe U+0000 glyph will present in each default font */
+	frc[frclen].unicodep = 0;
+	frclen++;
+
+	return 0;
+}
+
+void
+xloadsparefonts(void)
+{
+	FcPattern *pattern;
+	double sizeshift, fontval;
+	int fc;
+	char **fp;
+
+	if (frclen != 0)
+		die("can't embed spare fonts. cache isn't empty");
+
+	/* Calculate count of spare fonts */
+	fc = sizeof(font2) / sizeof(*font2);
+	if (fc == 0)
+		return;
+
+	/* Allocate memory for cache entries. */
+	if (frccap < 4 * fc) {
+		frccap += 4 * fc - frccap;
 		frc = xrealloc(frc, frccap * sizeof(Fontcache));
-		/* add Normal */
-		match = FcFontMatch(NULL, fontpattern, &result);
-		if ( match ) 
-			frc[frclen].font = XftFontOpenPattern(xw.dpy, match);
-			if ( frc[frclen].font ) {
-				frc[frclen].flags = FRC_NORMAL;
-				frclen++;
-			} else
-				FcPatternDestroy(match);
-		/* add Italic */
-		FcPatternDel(fontpattern, FC_SLANT);
-		FcPatternAddInteger(fontpattern, FC_SLANT, FC_SLANT_ITALIC);
-		match = FcFontMatch(NULL, fontpattern, &result);
-		if ( match )
-			frc[frclen].font = XftFontOpenPattern(xw.dpy, match);
-			if ( frc[frclen].font ) {
-				frc[frclen].flags = FRC_ITALIC;
-				frclen++;
-			} else
-				FcPatternDestroy(match);
-		/* add Italic Bold */
-		FcPatternDel(fontpattern, FC_WEIGHT);
-		FcPatternAddInteger(fontpattern, FC_WEIGHT, FC_WEIGHT_BOLD);
-		match = FcFontMatch(NULL, fontpattern, &result);
-		if ( match )
-			frc[frclen].font = XftFontOpenPattern(xw.dpy, match);
-			if ( frc[frclen].font ) {
-				frc[frclen].flags = FRC_ITALICBOLD;
-				frclen++;
-			} else 
-				FcPatternDestroy(match);
-		/* add Bold */
-		FcPatternDel(fontpattern, FC_SLANT);
-		FcPatternAddInteger(fontpattern, FC_SLANT, FC_SLANT_ROMAN);
-		match = FcFontMatch(NULL, fontpattern, &result);
-		if ( match )
-			frc[frclen].font = XftFontOpenPattern(xw.dpy, match);
-			if ( frc[frclen].font ) {
-				frc[frclen].flags = FRC_BOLD;
-				frclen++;
-			} else 
-				FcPatternDestroy(match);
-		FcPatternDestroy(fontpattern);
+	}
+
+	for (fp = font2; fp - font2 < fc; ++fp) {
+
+		if (**fp == '-')
+			pattern = XftXlfdParse(*fp, False, False);
+		else
+			pattern = FcNameParse((FcChar8 *)*fp);
+
+		if (!pattern)
+			die("can't open spare font %s\n", *fp);
+
+		if (defaultfontsize > 0) {
+			sizeshift = usedfontsize - defaultfontsize;
+			if (sizeshift != 0 &&
+					FcPatternGetDouble(pattern, FC_PIXEL_SIZE, 0, &fontval) ==
+					FcResultMatch) {
+				fontval += sizeshift;
+				FcPatternDel(pattern, FC_PIXEL_SIZE);
+				FcPatternDel(pattern, FC_SIZE);
+				FcPatternAddDouble(pattern, FC_PIXEL_SIZE, fontval);
+			}
+		}
+
+		FcPatternAddBool(pattern, FC_SCALABLE, 1);
+
+		FcConfigSubstitute(NULL, pattern, FcMatchPattern);
+		XftDefaultSubstitute(xw.dpy, xw.scr, pattern);
+
+		if (xloadsparefont(pattern, FRC_NORMAL))
+			die("can't open spare font %s\n", *fp);
+
+		FcPatternDel(pattern, FC_SLANT);
+		FcPatternAddInteger(pattern, FC_SLANT, FC_SLANT_ITALIC);
+		if (xloadsparefont(pattern, FRC_ITALIC))
+			die("can't open spare font %s\n", *fp);
+
+		FcPatternDel(pattern, FC_WEIGHT);
+		FcPatternAddInteger(pattern, FC_WEIGHT, FC_WEIGHT_BOLD);
+		if (xloadsparefont(pattern, FRC_ITALICBOLD))
+			die("can't open spare font %s\n", *fp);
+
+		FcPatternDel(pattern, FC_SLANT);
+		FcPatternAddInteger(pattern, FC_SLANT, FC_SLANT_ROMAN);
+		if (xloadsparefont(pattern, FRC_BOLD))
+			die("can't open spare font %s\n", *fp);
+
+		FcPatternDestroy(pattern);
 	}
 }
 
@@ -1182,8 +1230,8 @@ xinit(int cols, int rows)
 	usedfont = (opt_font == NULL)? font : opt_font;
 	xloadfonts(usedfont, 0);
 
-	/* spare font (font2) */
-	xloadsparefont();
+	/* spare fonts */
+	xloadsparefonts();
 
 	/* colors */
 	xw.cmap = XDefaultColormap(xw.dpy, xw.scr);
@@ -1666,8 +1714,9 @@ xseticontitle(char *p)
 	XTextProperty prop;
 	DEFAULT(p, opt_title);
 
-	Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
-			&prop);
+	if (Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
+	                                &prop) != Success)
+		return;
 	XSetWMIconName(xw.dpy, xw.win, &prop);
 	XSetTextProperty(xw.dpy, xw.win, &prop, xw.netwmiconname);
 	XFree(prop.value);
@@ -1679,8 +1728,9 @@ xsettitle(char *p)
 	XTextProperty prop;
 	DEFAULT(p, opt_title);
 
-	Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
-			&prop);
+	if (Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
+	                                &prop) != Success)
+		return;
 	XSetWMName(xw.dpy, xw.win, &prop);
 	XSetTextProperty(xw.dpy, xw.win, &prop, xw.netwmname);
 	XFree(prop.value);
