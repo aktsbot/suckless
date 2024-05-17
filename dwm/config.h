@@ -84,7 +84,7 @@ static const char *powermenucmd[] = { "dmenu_exit.sh", NULL };
 static const char *browsercmd[] = { "firefox", NULL };
 static const char *editorcmd[] = { "st", "-e", "nvim" ,NULL };
 static const char *filercmd[] = { "thunar", NULL };
-static const char *toggleredshiftcmd[] = { "toggle-redshift", NULL };
+static const char *toggleredshiftcmd[] = { "toggle_redshift.sh", NULL };
 static const char *audaciouscmd[] = { "audacious", NULL };
 
 static Key keys[] = {
