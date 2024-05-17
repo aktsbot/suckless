@@ -5,7 +5,6 @@ Patched [dwm](https://dwm.suckless.org/), [dmenu](https://tools.suckless.org/dme
 ## Installation
 
 ```
-$ sudo xbps-install -S base-devel libX11-devel libXft-devel libXinerama-devel
 $ git clone https://github.com/aktsbot/suckless
 $ cd suckless/dwm
 $ make && sudo make install
@@ -17,4 +16,4 @@ $ make && sudo make install
 
 See [my dotfiles](https://github.com/aktsbot/dotfiles/).
 
-![preview](https://www.aktsbot.in/pub/scrots/dwm_suckless_02.png)
+![preview](https://www.aktsbot.in/pub/scrots/slack_dwm_01.png)
