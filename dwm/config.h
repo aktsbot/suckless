@@ -10,14 +10,14 @@ static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corne
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;     /* 0 means no systray */
-static const char *fonts[]          = { "monospace:size=9" };
-static const char dmenufont[]       = "monospace:size=9";
+static const char *fonts[]          = { "monospace:bold:size=8" };
+static const char dmenufont[]       = "monospace:bold:size=8";
 static const char col_black[]       = "#000000";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#aaaaaa";
 static const char col_gray3[]       = "#333333";
-static const char col_white[]       = "#ffffff";
-static const char col_cyan[]	    = "#007777";
+static const char col_white[]       = "#e5e5e5";
+static const char col_cyan[]	    = "#535D6C";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray2, col_black, col_gray1 },
@@ -93,7 +93,7 @@ static Key keys[] = {
 	{ 0,                            XF86MonBrightnessUp,       spawn,         {.v = cmdbrightnessup } },
 	{ 0,                            XF86AudioMute,             spawn,         {.v = cmdsoundtoggle } },
 	{ 0,                            XF86AudioRaiseVolume,      spawn,         {.v = cmdsoundup } },
-	{ 0,                            XF86AudioLowerVolume,      spawn,         {.v = cmdsounddown } }, 
+	{ 0,                            XF86AudioLowerVolume,      spawn,         {.v = cmdsounddown } },
 	{ 0,                            XF86AudioMicMute,          spawn,         {.v = mictoggle } },
 	{ MODKEY,                       XK_x,      spawn,          {.v = cmdlock } },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          {.v = browsercmd } },
